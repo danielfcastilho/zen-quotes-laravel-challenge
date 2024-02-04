@@ -3,14 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\Quote;
+use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Tests\AuthenticationHelper;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use AuthenticationHelper, RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * The application supports authentication and authorization.
@@ -21,9 +22,10 @@ class AuthenticationTest extends TestCase
         $response = $this->post('/login', [
             'username' => 'wrong-username',
             'password' => 'wrong-password',
+            'password_confirmation' => 'wrong-password',
         ]);
-
         $response->assertUnauthorized();
+
         $this->assertGuest();
 
         /* Authorization */
@@ -31,13 +33,17 @@ class AuthenticationTest extends TestCase
         $response->assertNotFound();
 
         /* Authentication */
-        $this->registerAndLoginUser();
+        $user = User::factory()->create();
+
+        $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
 
         $this->assertAuthenticated();
 
         /* Authorization */
         $response = $this->get('/report-favorite-quotes');
-
         $response->assertOk();
     }
 
@@ -46,9 +52,14 @@ class AuthenticationTest extends TestCase
      */
     public function test_users_can_login_with_uri_login_using_username_and_password()
     {
-        $token = $this->registerAndLoginUser();
+        $user = User::factory()->create();
 
-        $this->assertNotNull($token);
+        $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
+
+        $this->assertAuthenticatedAs($user);
     }
 
     /**
@@ -56,7 +67,7 @@ class AuthenticationTest extends TestCase
      */
     public function test_the_username_is_in_the_form_of_a_proper_email_address_containing_only_alphanumeric_characters_plus_at_sign_and_dot()
     {
-        $invalidEmails = [
+        $invalidUsernames = [
             'testexample.com',
             'test@examplecom',
             'test@.com',
@@ -68,10 +79,10 @@ class AuthenticationTest extends TestCase
             'test@exam..ple.com',
         ];
 
-        foreach ($invalidEmails as $email) {
+        foreach ($invalidUsernames as $invalidUsername) {
             $response = $this->post('/login', [
-                'username' => $email,
-                'password' => 'password',
+                'username' => $invalidUsername,
+                'password' => UserFactory::defaultPassword(),
             ]);
 
             $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -83,9 +94,18 @@ class AuthenticationTest extends TestCase
      */
     public function test_each_user_is_assigned_api_login_token()
     {
-        $token = $this->registerAndLoginUser();
+        $user = User::factory()->create();
 
-        $this->assertNotNull($token);
+        $response = $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
+
+        $response->assertCookie('api_token');
+
+        $cookie = $response->cookies->get('api_token');
+        $this->assertNotNull($cookie);
+        $this->assertNotEmpty($cookie->getValue());
     }
 
     /**
@@ -103,7 +123,14 @@ class AuthenticationTest extends TestCase
      */
     public function test_login_page_is_accessible_to_authenticated_users()
     {
-        $this->registerAndLoginUser();
+        $user = User::factory()->create();
+
+        $response = $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
+
+        $this->assertAuthenticated();
 
         $response = $this->get('/login');
 
@@ -115,26 +142,35 @@ class AuthenticationTest extends TestCase
      */
     public function test_page_allows_for_currently_authenticated_users_to_switch_to_another_authenticated_user()
     {
-        $user1 = [
-            'email' => 'user1@example.com',
-            'password' => 'password'
-        ];
+        $user1 = User::factory()->create();
 
-        $this->registerUser($user1);
-        $this->loginUser($user1['email'], $user1['password']);
+        $this->post('/login', [
+            'username' => $user1->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
 
-        $user2 = [
-            'email' => 'user2@example.com',
-            'password' => 'password'
-        ];
+        $this->assertAuthenticatedAs($user1);
 
-        $this->registerUser($user2);
-        $this->loginUser($user2['email'], $user2['password']);
+        $user2 = User::factory()->create();
+
+        $this->post('/login', [
+            'username' => $user2->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
+
+        $this->assertAuthenticatedAs($user2);
 
         $loginResponse = $this->get('/login');
         $loginResponse->assertViewHas('authenticatedUsers', function ($authenticatedUsers) {
             return count($authenticatedUsers) == 2;
         });
+
+        $this->post('/login', [
+            'username' => $user1['username'],
+            'switch_user' => true,
+        ]);
+
+        $this->assertAuthenticatedAs($user1);
     }
 
     /**
@@ -142,22 +178,21 @@ class AuthenticationTest extends TestCase
      */
     public function test_the_login_and_logout_process_does_not_delete_the_list_of_favorites_for_a_previously_logged_in_user()
     {
-        $quote = Quote::factory()->create();
+        $user = User::factory()->create();
 
-        $user = [
-            'email' => 'user1@example.com',
-            'password' => 'password'
-        ];
+        $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
 
-        $this->registerUser($user);
-
-        $this->loginUser($user['email'], $user['password']);
-
-        $this->post('/favorite-quotes', ['id' => $quote->id]);
+        $quote = Quote::for($user, 'users')->factory()->create();
 
         $this->post('/logout');
 
-        $this->loginUser($user['email'], $user['password']);
+        $this->post('/login', [
+            'username' => $user->username,
+            'password' => UserFactory::defaultPassword(),
+        ]);
 
         $response = $this->get('/favorite-quotes');
 

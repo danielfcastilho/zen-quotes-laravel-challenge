@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -32,10 +32,10 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [UserController::class, 'store']);
 
-    Route::get('login', [AuthController::class, 'create'])
+    Route::get('login', [AuthenticationController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthController::class, 'store']);
+    Route::post('login', [AuthenticationController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -47,6 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [UserController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('logout', [AuthController::class, 'destroy'])
+    Route::post('logout', [AuthenticationController::class, 'destroy'])
         ->name('logout');
 });
