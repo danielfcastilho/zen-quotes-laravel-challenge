@@ -97,7 +97,7 @@ export default function Login({ auth, authenticatedUsers }) {
                         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                             {formContent}
                         </div>
-                        {authenticatedUsers.length > 1 && (
+                        {Object.keys(authenticatedUsers).length > 1 && (
                             <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                                 <section className={`space-y-6 max-w-xl`}>
                                     <header>
@@ -106,10 +106,10 @@ export default function Login({ auth, authenticatedUsers }) {
                                         </h2>
                                     </header>
                                     <ul>
-                                        {authenticatedUsers
+                                        {Object.values(authenticatedUsers)
                                             .filter(
                                                 (username) =>
-                                                    username !==
+                                                    username !=
                                                     auth.user.username
                                             )
                                             .map((username, index) => (

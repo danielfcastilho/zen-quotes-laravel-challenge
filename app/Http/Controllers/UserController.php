@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -30,21 +30,26 @@ class UserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'username' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
         $user = User::create([
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
+            'username' => $request->validated('username'),
+            'password' => Hash::make($request->validated('password')),
         ]);
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        $authenticatedUsers = session()->get('authenticatedUsers', []);
+        if (!in_array($user->username, $authenticatedUsers)) {
+            $authenticatedUsers[] = $user->username;
+        }
+        session()->put('authenticatedUsers', $authenticatedUsers);
+
+        $apiToken = $user->createToken('api_token')->plainTextToken;
+
+        $cookie = cookie('api_token', $apiToken, 60, null, null, true, true);
+
+        return redirect(RouteServiceProvider::HOME)->withCookie($cookie);
     }
 
     /**
