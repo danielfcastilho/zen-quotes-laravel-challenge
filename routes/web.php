@@ -40,7 +40,10 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/today', function () {
-        return Inertia::render('Today');
+        return Inertia::render('Today', [
+            'quote' => ['quote_text' => "lorem ipsum [cached]"],
+            'randomInspirationalImage' => "image"
+        ]);
     })->middleware(['auth'])->name('today');
 
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
