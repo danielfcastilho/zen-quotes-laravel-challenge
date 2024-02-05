@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Quote;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,10 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        for ($i = 0; $i < 3; $i++) {
+            $user = User::factory()->create();
 
-        // \App\Models\User::factory()->create([
-        //     'username' => 'test@example.com',
-        // ]);
+            $quoteIds = [];
+            for ($j = 0; $j < 3; $j++) {
+                $quote = Quote::factory()->create();
+                $quoteIds[] = $quote->id;
+            }
+
+            $user->favoriteQuotes()->attach($quoteIds);
+        }
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('quotes', function (Blueprint $table) {
-            $table->id('quote_id');
+            $table->id('id');
             $table->text('quote_text');
             $table->string('author_name', 255);
             $table->integer('character_count');

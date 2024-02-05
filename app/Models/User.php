@@ -57,6 +57,6 @@ class User extends Authenticatable
      */
     public function favoriteQuotes(): BelongsToMany
     {
-        return $this->belongsToMany(Quote::class, 'favorite_quotes', 'user_id', 'quote_id');
+        return $this->belongsToMany(Quote::class, 'favorite_quotes');
     }
 }
