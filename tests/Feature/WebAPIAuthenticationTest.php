@@ -8,7 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AuthenticationTest extends TestCase
+class WebAPIAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 

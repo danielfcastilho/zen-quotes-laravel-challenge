@@ -16,7 +16,7 @@ class DatastoreInitializationTest extends TestCase
      */
     public function test_datastore_should_be_initialized_with_three_users()
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed();
 
         $seededUsersCount = User::count();
 
@@ -26,9 +26,9 @@ class DatastoreInitializationTest extends TestCase
     /**
      * Datastore should be initialized with a list containing 3 favorite quotes for each seeded user.
      */
-    public function test_datastore_should_be_initialized_with_a_list_containing_3_favorite_quotes_for_each_seeded_user()
+    public function test_datastore_should_be_initialized_with_a_list_containing_three_favorite_quotes_for_each_seeded_user()
     {
-        $this->seed(DatabaseSeeder::class);
+        $this->seed();
 
         $seededUsers = User::all();
 
