@@ -1,12 +1,12 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import DefaultLayout from '@/Layouts/DefaultLayout';
 import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { Head } from '@inertiajs/react';
 
 export default function Edit({ auth }) {
     return (
-        <AuthenticatedLayout
-            user={auth.user}
+        <DefaultLayout
+            auth={auth}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Profile</h2>}
         >
             <Head title="Profile" />
@@ -24,6 +24,6 @@ export default function Edit({ auth }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </DefaultLayout>
     );
 }

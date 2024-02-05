@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import DefaultLayout from "@/Layouts/DefaultLayout";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
@@ -82,8 +82,8 @@ export default function Login({ auth, authenticatedUsers }) {
 
     if (auth.user) {
         return (
-            <AuthenticatedLayout
-                user={auth.user}
+            <DefaultLayout
+                auth={auth}
                 header={
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                         Login
@@ -143,7 +143,7 @@ export default function Login({ auth, authenticatedUsers }) {
                         )}
                     </div>
                 </div>
-            </AuthenticatedLayout>
+            </DefaultLayout>
         );
     } else {
         return <GuestLayout>{formContent}</GuestLayout>;

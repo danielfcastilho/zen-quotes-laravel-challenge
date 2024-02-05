@@ -17,39 +17,64 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::redirect('/', '/today');
 
-Route::get('login', [AuthenticationController::class, 'create'])
-    ->name('login');
+Route::get('login', [AuthenticationController::class, 'create'])->name('login');
 
 Route::post('login', [AuthenticationController::class, 'store']);
 
+Route::get('/today', function () {
+    return Inertia::render('Quote/Today', [
+        'quote' => ['quote_text' => "lorem ipsum [cached]"],
+        'randomInspirationalImage' => "image"
+    ]);
+})->name('today');
+
+Route::get('/api-test', function () {
+    return Inertia::render('Api/Test', [
+        'quote' => ['quote_text' => "lorem ipsum [cached]"],
+        'randomInspirationalImage' => "image"
+    ]);
+})->name('api-test');
+
 Route::middleware('guest')->group(function () {
-    Route::get('register', [UserController::class, 'create'])
-        ->name('register');
+    Route::get('/quotes', function () {
+        return Inertia::render('Quote/Quotes', [
+            'quote' => ['quote_text' => "lorem ipsum [cached]"],
+            'randomInspirationalImage' => "image"
+        ]);
+    })->name('quotes');
+
+    Route::get('register', [UserController::class, 'create'])->name('register');
 
     Route::post('register', [UserController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/today', function () {
-        return Inertia::render('Today', [
+    Route::get('/secure-quotes', function () {
+        return Inertia::render('Quote/Secure', [
             'quote' => ['quote_text' => "lorem ipsum [cached]"],
             'randomInspirationalImage' => "image"
         ]);
-    })->middleware(['auth'])->name('today');
+    })->name('secure-quotes');
+    
+    Route::get('/favorite-quotes', function () {
+        return Inertia::render('Quote/Favorite', [
+            'quote' => ['quote_text' => "lorem ipsum [cached]"],
+            'randomInspirationalImage' => "image"
+        ]);
+    })->name('favorite-quotes');
+    
+    Route::get('/report-favorite-quotes', function () {
+        return Inertia::render('Quote/ReportFavorite', [
+            'quote' => ['quote_text' => "lorem ipsum [cached]"],
+            'randomInspirationalImage' => "image"
+        ]);
+    })->name('report-favorite-quotes');
 
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [UserController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('logout', [AuthenticationController::class, 'destroy'])
-        ->name('logout');
+    Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
 });

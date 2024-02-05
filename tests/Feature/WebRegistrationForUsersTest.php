@@ -85,6 +85,6 @@ class WebRegistrationForUsersTest extends TestCase
             'username' => $user->username,
             'password' => UserFactory::defaultPassword()
         ]);
-        $authenticatedResponse->assertRedirect('/');
+        $authenticatedResponse->assertRedirect('/today');
     }
 }
