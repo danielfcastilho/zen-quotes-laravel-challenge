@@ -26,16 +26,16 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('login', [AuthenticationController::class, 'create'])
+    ->name('login');
+
+Route::post('login', [AuthenticationController::class, 'store']);
+
 Route::middleware('guest')->group(function () {
     Route::get('register', [UserController::class, 'create'])
         ->name('register');
 
     Route::post('register', [UserController::class, 'store']);
-
-    Route::get('login', [AuthenticationController::class, 'create'])
-        ->name('login');
-
-    Route::post('login', [AuthenticationController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {

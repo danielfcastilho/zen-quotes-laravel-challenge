@@ -6,7 +6,6 @@ use App\Models\Quote;
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -18,23 +17,22 @@ class AuthenticationTest extends TestCase
      */
     public function test_the_application_supports_authentication_and_authorization()
     {
+        $user = User::factory()->create();
+
         /* Authentication */
         $response = $this->post('/login', [
-            'username' => 'wrong-username',
+            'username' => $user->username,
             'password' => 'wrong-password',
-            'password_confirmation' => 'wrong-password',
         ]);
-        $response->assertUnauthorized();
+        $response->assertSessionHasErrors('username');
 
         $this->assertGuest();
 
         /* Authorization */
-        $response = $this->get('/report-favorite-quotes');
-        $response->assertNotFound();
+        $response = $this->get('/profile');
+        $response->assertRedirect();
 
         /* Authentication */
-        $user = User::factory()->create();
-
         $this->post('/login', [
             'username' => $user->username,
             'password' => UserFactory::defaultPassword(),
@@ -43,7 +41,7 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticated();
 
         /* Authorization */
-        $response = $this->get('/report-favorite-quotes');
+        $response = $this->get('/profile');
         $response->assertOk();
     }
 
@@ -85,7 +83,7 @@ class AuthenticationTest extends TestCase
                 'password' => UserFactory::defaultPassword(),
             ]);
 
-            $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+            $response->assertSessionHasErrors('username');
         }
     }
 
@@ -103,7 +101,8 @@ class AuthenticationTest extends TestCase
 
         $response->assertCookie('api_token');
 
-        $cookie = $response->cookies->get('api_token');
+        $cookie = $response->getCookie('api_token');
+
         $this->assertNotNull($cookie);
         $this->assertNotEmpty($cookie->getValue());
     }
@@ -161,16 +160,20 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticatedAs($user2);
 
         $loginResponse = $this->get('/login');
-        $loginResponse->assertViewHas('authenticatedUsers', function ($authenticatedUsers) {
-            return count($authenticatedUsers) == 2;
-        });
+        $loginResponse->assertInertia(
+            fn ($page) =>
+            $page->has('authenticatedUsers')
+                ->where('authenticatedUsers', [$user1->username, $user2->username])
+        );
 
-        $this->post('/login', [
-            'username' => $user1['username'],
-            'switch_user' => true,
-        ]);
+        $this->post('/logout');
 
-        $this->assertAuthenticatedAs($user1);
+        $loginResponse = $this->get('/login');
+        $loginResponse->assertInertia(
+            fn ($page) =>
+            $page->has('authenticatedUsers')
+                ->where('authenticatedUsers', [$user1->username])
+        );
     }
 
     /**

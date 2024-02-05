@@ -18,7 +18,9 @@ class AuthenticationController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Auth/Login', [
+            'authenticatedUsers' => session()->get('authenticatedUsers', [])
+        ]);
     }
 
     /**
@@ -30,7 +32,19 @@ class AuthenticationController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = $request->user();
+
+        $authenticatedUsers = session()->get('authenticatedUsers', []);
+        if (!in_array($user->username, $authenticatedUsers)) {
+            $authenticatedUsers[] = $user->username;
+        }
+        session()->put('authenticatedUsers', $authenticatedUsers);
+
+        $apiToken = $user->createToken('api_token')->plainTextToken;
+
+        $cookie = cookie('api_token', $apiToken, 60, null, null, true, true);
+
+        return redirect()->intended(RouteServiceProvider::HOME)->withCookie($cookie);
     }
 
     /**
@@ -38,11 +52,19 @@ class AuthenticationController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $authenticatedUsers = session()->get('authenticatedUsers', []);
+
+        if (($key = array_search($request->user()->username, $authenticatedUsers)) !== false) {
+            unset($authenticatedUsers[$key]);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        session()->put('authenticatedUsers', $authenticatedUsers);
 
         return redirect('/');
     }
