@@ -86,11 +86,11 @@ export default function Login({ auth, authenticatedUsers }) {
                 auth={auth}
                 header={
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Login
+                        Log in
                     </h2>
                 }
             >
-                <Head title="Login" />
+                <Head title="Log in" />
 
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

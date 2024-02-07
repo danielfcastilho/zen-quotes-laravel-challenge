@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\DailyQuoteController;
+use App\Http\Controllers\FavoriteQuoteController;
+use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\RandomQuoteController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,54 +26,23 @@ Route::get('login', [AuthenticationController::class, 'create'])->name('login');
 
 Route::post('login', [AuthenticationController::class, 'store']);
 
-Route::get('/today', function () {
-    return Inertia::render('Quote/Today', [
-        'quote' => ['quote_text' => "lorem ipsum [cached]"],
-        'randomInspirationalImage' => "image"
-    ]);
-})->name('today');
+Route::get('/today', [DailyQuoteController::class, 'show'])->name('today');
 
-Route::get('/api-test', function () {
-    return Inertia::render('Api/Test', [
-        'quote' => ['quote_text' => "lorem ipsum [cached]"],
-        'randomInspirationalImage' => "image"
-    ]);
-})->name('api-test');
+Route::get('/api-test', ApiTestController::class)->name('api-test');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/quotes', function () {
-        return Inertia::render('Quote/Quotes', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
-            'randomInspirationalImage' => "image"
-        ]);
-    })->name('quotes');
-
+    Route::get('/quotes', [RandomQuoteController::class, 'index'])->name('quotes');
+    
     Route::get('register', [UserController::class, 'create'])->name('register');
-
     Route::post('register', [UserController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/secure-quotes', function () {
-        return Inertia::render('Quote/Secure', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
-            'randomInspirationalImage' => "image"
-        ]);
-    })->name('secure-quotes');
-    
-    Route::get('/favorite-quotes', function () {
-        return Inertia::render('Quote/Favorite', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
-            'randomInspirationalImage' => "image"
-        ]);
-    })->name('favorite-quotes');
-    
-    Route::get('/report-favorite-quotes', function () {
-        return Inertia::render('Quote/ReportFavorite', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
-            'randomInspirationalImage' => "image"
-        ]);
-    })->name('report-favorite-quotes');
+    Route::get('/secure-quotes', [RandomQuoteController::class, 'secureIndex'])->name('secure-quotes');
+
+    Route::get('/favorite-quotes', [FavoriteQuoteController::class, 'index'])->name('favorite-quotes');
+
+    Route::get('/report-favorite-quotes', [FavoriteQuoteController::class, 'report'])->name('report-favorite-quotes');
 
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
