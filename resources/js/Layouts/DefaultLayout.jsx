@@ -5,7 +5,7 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 
-export default function DefaultLayout({ auth, header, children }) {
+export default function DefaultLayout({ auth, header, children, forceReloadUrl = false }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
@@ -296,8 +296,16 @@ export default function DefaultLayout({ auth, header, children }) {
 
                 {header && (
                     <header className="bg-white shadow">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {header}
+                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                            <div>{header}</div>
+                            {forceReloadUrl && (
+                                <Link
+                                    href={forceReloadUrl}
+                                    className="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                >
+                                    Force Reload
+                                </Link>
+                            )}
                         </div>
                     </header>
                 )}

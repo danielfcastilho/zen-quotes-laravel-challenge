@@ -30,6 +30,7 @@ export default function Show({
                     Quote of the Day
                 </h2>
             }
+            forceReloadUrl="/today/new"
         >
             <Head title="Quote of the Day" />
             <div className="py-12">
