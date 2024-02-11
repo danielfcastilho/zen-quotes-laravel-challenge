@@ -26,7 +26,7 @@ Route::get('login', [AuthenticationController::class, 'create'])->name('login');
 
 Route::post('login', [AuthenticationController::class, 'store']);
 
-Route::get('/today', [DailyQuoteController::class, 'show'])->name('today');
+Route::get('/today/{new?}', [DailyQuoteController::class, 'show'])->where('option', 'new|')->name('today');
 
 Route::get('/api-test', ApiTestController::class)->name('api-test');
 

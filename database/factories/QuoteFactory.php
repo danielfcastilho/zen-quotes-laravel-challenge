@@ -21,8 +21,6 @@ class QuoteFactory extends Factory
         return [
             'quote_text' => $quoteText,
             'author_name' => fake()->name(),
-            'character_count' => strlen($quoteText),
-            'html_representation' => "<blockquote>&ldquo;{$quoteText}&rdquo; &mdash; <footer>" . fake()->name() . "</footer></blockquote>",
         ];
     }
 }

@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id('id');
             $table->text('quote_text');
             $table->string('author_name', 255);
-            $table->integer('character_count');
-            $table->text('html_representation');
             $table->timestamps();
         });
     }

@@ -203,6 +203,47 @@ export default function DefaultLayout({ auth, header, children }) {
                             >
                                 Quote of the Day
                             </ResponsiveNavLink>
+                            {auth.user ? (
+                                <>
+                                    <ResponsiveNavLink
+                                        href={route("secure-quotes")}
+                                        active={route().current(
+                                            "secure-quotes"
+                                        )}
+                                    >
+                                        Ten Secure Quotes
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route("favorite-quotes")}
+                                        active={route().current(
+                                            "favorite-quotes"
+                                        )}
+                                    >
+                                        Favorite Quotes
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route("report-favorite-quotes")}
+                                        active={route().current(
+                                            "report-favorite-quotes"
+                                        )}
+                                    >
+                                        Report of Favorite Quotes
+                                    </ResponsiveNavLink>
+                                </>
+                            ) : (
+                                <ResponsiveNavLink
+                                    href={route("quotes")}
+                                    active={route().current("quotes")}
+                                >
+                                    Five Random Quotes
+                                </ResponsiveNavLink>
+                            )}
+                            <ResponsiveNavLink
+                                href={route("api-test")}
+                                active={route().current("api-test")}
+                            >
+                                Online API Test
+                            </ResponsiveNavLink>
                         </div>
 
                         {auth.user ? (

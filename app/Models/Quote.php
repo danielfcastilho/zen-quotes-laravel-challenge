@@ -18,9 +18,6 @@ class Quote extends Model
     protected $fillable = [
         'quote_text',
         'author_name',
-        'author_image_url',
-        'character_count',
-        'html_representation',
     ];
 
     /**
