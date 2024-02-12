@@ -117,11 +117,11 @@ class SecureQuoteTest extends TestCase
      */
     public function test_the_web_page_should_display_cached_information_if_available_by_default()
     {
-        $this->actingAs($this->user)->get('/secure_quotes');
+        $this->actingAs($this->user)->get('/secure-quotes');
 
         $cachedQuotes = Cache::get('secure_quotes');
 
-        $response = $this->actingAs($this->user)->get('/secure_quotes');
+        $response = $this->actingAs($this->user)->get('/secure-quotes');
 
         $response->assertInertia(
             function ($page) use ($cachedQuotes) {
@@ -171,9 +171,9 @@ class SecureQuoteTest extends TestCase
      */
     public function test_there_should_be_a_button_to_force_a_reload_of_a_list_of_10_random_quotes_with_a_new_parameter()
     {
-        $this->get('/secure-quotes');
+        $this->actingAs($this->user)->get('/secure-quotes');
 
-        $response = $this->get('/secure-quotes/new');
+        $response = $this->actingAs($this->user)->get('/secure-quotes/new');
 
         $response->assertInertia(
             fn ($page) => $page->has('quotes')
