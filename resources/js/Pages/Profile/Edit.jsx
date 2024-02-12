@@ -1,5 +1,4 @@
 import DefaultLayout from '@/Layouts/DefaultLayout';
-import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import { Head } from '@inertiajs/react';
 
@@ -17,10 +16,6 @@ export default function Edit({ auth }) {
                         <UpdateProfileInformationForm
                             className="max-w-xl"
                         />
-                    </div>
-
-                    <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <DeleteUserForm className="max-w-xl" />
                     </div>
                 </div>
             </div>

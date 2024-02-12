@@ -45,11 +45,11 @@ class UserController extends Controller
         }
         session()->put('authenticatedUsers', $authenticatedUsers);
 
-        $apiToken = $user->createToken('api_token')->plainTextToken;
+        $apiToken = $user->createToken('apiToken')->plainTextToken;
 
-        $cookie = cookie('api_token', $apiToken, 60, null, null, true, true);
+        session()->put('apiToken', $apiToken);
 
-        return redirect(RouteServiceProvider::HOME)->withCookie($cookie);
+        return redirect(RouteServiceProvider::HOME);
     }
 
     /**
@@ -65,31 +65,20 @@ class UserController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $oldUsername = $request->user()->username;
+
+        $authenticatedUsers = session()->get('authenticatedUsers', []);
+        foreach ($authenticatedUsers as $key => $authenticatedUser) {
+            if ($oldUsername === $authenticatedUser) {
+                $authenticatedUsers[$key] = $request->validated('username');
+            }
+        }
+        session()->put('authenticatedUsers', $authenticatedUsers);
+
         $request->user()->fill($request->validated());
 
         $request->user()->save();
 
         return Redirect::route('profile.edit');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
     }
 }

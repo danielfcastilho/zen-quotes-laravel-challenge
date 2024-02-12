@@ -40,9 +40,9 @@ class AuthenticationController extends Controller
         }
         session()->put('authenticatedUsers', $authenticatedUsers);
 
-        $token = $user->createToken('apiToken')->plainTextToken;
+        $apiToken = $user->createToken('apiToken')->plainTextToken;
 
-        session()->put('apiToken', $token);
+        session()->put('apiToken', $apiToken);
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }
