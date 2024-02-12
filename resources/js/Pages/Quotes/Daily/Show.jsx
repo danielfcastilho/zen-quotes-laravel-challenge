@@ -3,7 +3,6 @@ import { Head } from "@inertiajs/react";
 import { useState } from "react";
 import QuoteSection from "@/Components/QuoteSection";
 import ImageSection from "@/Components/ImageSection";
-import favoriteService from "@/Services/Favorite";
 
 export default function Show({
     auth,
@@ -11,17 +10,6 @@ export default function Show({
     randomInspirationalImagePath,
     isFavorite,
 }) {
-    const [favorite, setFavorite] = useState(isFavorite);
-
-    const handleFavoriteToggle = async () => {
-        if (!favorite) {
-            await favoriteService.add(auth.user.id, quote.id);
-        } else {
-            await favoriteService.remove(auth.user.id, quote.id);
-        }
-        setFavorite(!favorite);
-    };
-
     return (
         <DefaultLayout
             auth={auth}
@@ -39,8 +27,7 @@ export default function Show({
                         <QuoteSection
                             auth={auth}
                             quote={quote}
-                            favorite={favorite}
-                            onFavoriteToggle={handleFavoriteToggle}
+                            isFavorite={isFavorite}
                         />
                         <ImageSection
                             imagePath={randomInspirationalImagePath}

@@ -1,18 +1,15 @@
 import axios from "axios";
 
-export default class Api {
-    constructor() {
+export default class ApiService {
+    constructor(token) {
         const apiURL = "/api";
-        this.authUrl = `${apiURL}/auth`;
-        this.favoriteUrl = `${apiURL}/favorite`;
+        this.favoriteUrl = `${apiURL}/favorite-quotes`;
 
         this.axiosInstance = axios.create();
 
         // Add a request interceptor
         this.axiosInstance.interceptors.request.use(
             (config) => {
-                const token = localStorage.getItem("jwtToken");
-
                 config.headers["Content-Type"] = "application/json";
                 config.withCredentials = true;
 

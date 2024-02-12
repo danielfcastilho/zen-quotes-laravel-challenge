@@ -20,4 +20,14 @@ class FavoriteQuoteController extends Controller
             'quote' => ['quote_text' => "lorem ipsum [cached]"],
         ]);
     }
+
+    public function store(Request $request)
+    {
+        $request->user()->favoriteQuotes()->attach($request->input('quote_id'));
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->user()->favoriteQuotes()->detach($request->input('quote_id'));
+    }
 }
