@@ -59,7 +59,7 @@ class RandomQuoteTest extends TestCase
     /**
      * A web page with URI of “/quotes” that shows 5 random quotes.
      */
-    public function test_a_web_page_uri_of_quotes_that_shows_5_random_quotes()
+    public function test_a_web_page_with_uri_of_quotes_that_shows_5_random_quotes()
     {
         $response = $this->get('/quotes');
 
@@ -68,6 +68,7 @@ class RandomQuoteTest extends TestCase
             ->where(
                 'quotes',
                 function ($quotes) {
+                    $this->assertCount(5, $quotes);
                     foreach ($quotes as $quote) {
                         if (empty($quote['quote_text']) || empty($quote['author_name'])) {
                             return false;
@@ -133,9 +134,9 @@ class RandomQuoteTest extends TestCase
     }
 
     /**
-     * There should be a button to force a reload of the “quote of the day” with a “new” parameter (e.g., /today/new).
+     * There should be a button to force a reload of a list of 5 random quotes with a “new” parameter (e.g., /quotes/new).
      */
-    public function test_there_should_be_a_button_to_force_a_reload_of_the_quote_of_the_day_with_a_new_parameter()
+    public function test_there_should_be_a_button_to_force_a_reload_of_a_list_of_5_random_quotes_with_a_new_parameter()
     {
         $this->get('/quotes');
 
@@ -155,9 +156,9 @@ class RandomQuoteTest extends TestCase
     }
 
     /**
-     * The page is accessible to unauthenticated users.
+     * The page is accessible to unauthenticated users only.
      */
-    public function test_the_page_is_accessible_to_unauthenticated_users()
+    public function test_the_page_is_accessible_to_unauthenticated_users_only()
     {
         $response = $this->get('/quotes');
 

@@ -12,6 +12,10 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
+        if ($request->is('secure-quotes') || $request->is('secure-quotes/*')) {
+            return route('quotes');
+        }
+
         return $request->expectsJson() ? null : route('login');
     }
 }
