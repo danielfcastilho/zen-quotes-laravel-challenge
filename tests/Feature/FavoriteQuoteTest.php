@@ -47,7 +47,7 @@ class FavoriteQuoteTest extends TestCase
     /**
      * The page is accessible to authenticated/logged in users only.
      */
-    public function test_the_page_is_accessible_to_unauthenticated_users_only()
+    public function test_the_page_is_accessible_to_authenticated_users_only()
     {
         $response = $this->actingAs($this->user)->get('/favorite-quotes');
 
