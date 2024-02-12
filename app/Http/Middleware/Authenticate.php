@@ -12,7 +12,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        if ($request->is('secure-quotes') || $request->is('secure-quotes/*')) {
+        if ($request->is('secure-quotes') || $request->is('secure-quotes/*') || $request->is('favorite-quotes')) {
             return route('quotes');
         }
 

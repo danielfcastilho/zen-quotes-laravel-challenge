@@ -7,10 +7,12 @@ use Inertia\Inertia;
 
 class FavoriteQuoteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
+
         return Inertia::render('Quotes/Favorites/List', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
+            'quotes' => $user->favoriteQuotes()->get()->toArray(),
         ]);
     }
 
