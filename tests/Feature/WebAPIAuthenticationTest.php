@@ -96,12 +96,7 @@ class WebAPIAuthenticationTest extends TestCase
             'password' => UserFactory::defaultPassword(),
         ]);
 
-        $response->assertCookie('api_token');
-
-        $cookie = $response->getCookie('api_token');
-
-        $this->assertNotNull($cookie);
-        $this->assertNotEmpty($cookie->getValue());
+        $response->assertSessionHas('apiToken');
     }
 
     /**
@@ -196,12 +191,8 @@ class WebAPIAuthenticationTest extends TestCase
             'password' => UserFactory::defaultPassword(),
         ]);
 
-        $response = $this->get('/favorite-quotes');
+        $quote->fresh();
 
-        // $response->assertInertia(
-        //     fn ($page) =>
-        //     $page->has('favoriteQuotes')
-        //         ->where('favoriteQuotes', [$quote])
-        // );
+        $this->assertEquals($quote->favoritedByUsers()->pluck('users.id')->toArray(), [$user->id]);
     }
 }
