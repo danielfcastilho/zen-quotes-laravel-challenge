@@ -48,10 +48,11 @@ class FavoriteQuoteReportTest extends TestCase
             fn ($page) => $page->has('users')
                 ->where('users', function ($users) use ($user1FavoriteQuotes, $user2FavoriteQuotes) {
                     foreach ($users as $user) {
+                        $userFavoriteQuotesIds = collect($user['favorite_quotes'])->pluck('id')->toArray();
                         if ($user['id'] === $this->user1->id) {
-                            if ($user['favoriteQuotes'] !== $user1FavoriteQuotes) return false;
+                            if ($userFavoriteQuotesIds !== $user1FavoriteQuotes) return false;
                         } else if ($user['id'] === $this->user2->id) {
-                            if ($user['favoriteQuotes'] !== $user2FavoriteQuotes) return false;
+                            if ($userFavoriteQuotesIds !== $user2FavoriteQuotes) return false;
                         } else {
                             return false;
                         }

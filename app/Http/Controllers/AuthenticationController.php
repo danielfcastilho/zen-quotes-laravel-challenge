@@ -16,10 +16,11 @@ class AuthenticationController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         return Inertia::render('Auth/Login', [
-            'authenticatedUsers' => session()->get('authenticatedUsers', [])
+            'authenticatedUsers' => session()->get('authenticatedUsers', []),
+            'username' => $request->get('username', null)
         ]);
     }
 

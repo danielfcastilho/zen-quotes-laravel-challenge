@@ -25,7 +25,7 @@ export default function QuoteSection({ auth, quote, isFavorite }) {
                 — {quote.author_name}
             </cite>
             <div className="mt-4 flex justify-center lg:justify-center space-x-4">
-                {auth.user && (
+                {auth && auth.user && (
                     <PrimaryButton onClick={handleFavoriteToggle}>
                         {favorite ? "Remove favorite" : "Add to favorites"}
                     </PrimaryButton>
