@@ -6,7 +6,6 @@ use App\Models\Quote;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -60,7 +59,7 @@ class QuoteOfTheDayTest extends TestCase
     /**
      * The web page should display cached information, if available, by default.
      */
-    public function test_the_page_should_display_cached_information_if_available_by_default()
+    public function test_the_web_page_should_display_cached_information_if_available_by_default()
     {
         $this->actingAs($this->user)->get('/today');
 
