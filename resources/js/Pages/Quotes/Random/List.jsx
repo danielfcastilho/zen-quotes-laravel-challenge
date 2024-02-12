@@ -1,7 +1,8 @@
 import DefaultLayout from "@/Layouts/DefaultLayout";
 import { Head } from "@inertiajs/react";
 
-export default function List({ auth }) {
+export default function List({ auth, quotes }) {
+    console.log(quotes);
     return (
         <DefaultLayout
             auth={auth}

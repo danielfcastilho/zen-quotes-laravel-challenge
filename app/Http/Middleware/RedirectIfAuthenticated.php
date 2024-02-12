@@ -21,7 +21,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                if ($request->is('quotes') || $request->is('quotes/*')) {
+                    return redirect('/secure-quotes');
+                } else {
+                    return redirect(RouteServiceProvider::HOME);
+                }
             }
         }
 

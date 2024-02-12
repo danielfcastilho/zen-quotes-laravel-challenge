@@ -4,7 +4,6 @@ use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DailyQuoteController;
 use App\Http\Controllers\FavoriteQuoteController;
-use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\RandomQuoteController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -31,14 +30,14 @@ Route::get('/today/{new?}', [DailyQuoteController::class, 'show'])->where('optio
 Route::get('/api-test', ApiTestController::class)->name('api-test');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/quotes', [RandomQuoteController::class, 'index'])->name('quotes');
-    
+    Route::get('/quotes/{new?}', [RandomQuoteController::class, 'index'])->where('option', 'new|')->name('quotes');
+
     Route::get('register', [UserController::class, 'create'])->name('register');
     Route::post('register', [UserController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/secure-quotes', [RandomQuoteController::class, 'secureIndex'])->name('secure-quotes');
+    Route::get('/secure-quotes/{new?}', [RandomQuoteController::class, 'secureIndex'])->where('option', 'new|')->name('secure-quotes');
 
     Route::get('/favorite-quotes', [FavoriteQuoteController::class, 'index'])->name('favorite-quotes');
 

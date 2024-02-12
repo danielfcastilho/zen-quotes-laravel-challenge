@@ -99,7 +99,7 @@ class RandomQuoteTest extends TestCase
 
                         $actualQuotes = array_map(function ($quote) {
                             return $quote['quote_text'];
-                        }, $quotes);
+                        }, $quotes->toArray());
 
                         sort($expectedQuotes);
                         sort($actualQuotes);
@@ -120,7 +120,7 @@ class RandomQuoteTest extends TestCase
         $response = $this->get('/quotes');
 
         $response->assertInertia(
-            fn ($page) => $page->has('quote')
+            fn ($page) => $page->has('quotes')
                 ->where('quotes', function ($quotes) {
                     foreach ($quotes as $quote) {
                         if (!str_contains($quote['quote_text'], '[cached]')) {
@@ -142,7 +142,7 @@ class RandomQuoteTest extends TestCase
         $response = $this->get('/quotes/new');
 
         $response->assertInertia(
-            fn ($page) => $page->has('quote')
+            fn ($page) => $page->has('quotes')
                 ->where('quotes', function ($quotes) {
                     foreach ($quotes as $quote) {
                         if (str_contains($quote['quote_text'], '[cached]')) {
