@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/today');
 
-Route::get('login', [AuthenticationController::class, 'create'])->name('login');
+Route::get('/login', [AuthenticationController::class, 'create'])->name('login');
 
-Route::post('login', [AuthenticationController::class, 'store']);
+Route::post('/login', [AuthenticationController::class, 'store']);
 
 Route::get('/today/{new?}', [DailyQuoteController::class, 'show'])->where('option', 'new|')->name('today');
 
@@ -32,8 +32,8 @@ Route::get('/api-test', ApiTestController::class)->name('api-test');
 Route::middleware('guest')->group(function () {
     Route::get('/quotes/{new?}', [RandomQuoteController::class, 'index'])->where('option', 'new|')->name('quotes');
 
-    Route::get('register', [UserController::class, 'create'])->name('register');
-    Route::post('register', [UserController::class, 'store']);
+    Route::get('/register', [UserController::class, 'create'])->name('register');
+    Route::post('/register', [UserController::class, 'store']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -46,5 +46,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [UserController::class, 'update'])->name('profile.update');
 
-    Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
+    Route::post('/logout', [AuthenticationController::class, 'destroy'])->name('logout');
 });

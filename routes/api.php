@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FavoriteQuoteController;
+use App\Http\Controllers\RandomQuoteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/quotes/{new?}', [RandomQuoteController::class, 'index'])->where('option', 'new|')->name('secure-quotes-api');
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('favorite-quotes', [FavoriteQuoteController::class, 'store']);
-    Route::delete('favorite-quotes', [FavoriteQuoteController::class, 'destroy']);
+    Route::get('/secure-quotes/{new?}', [RandomQuoteController::class, 'secureIndex'])->where('option', 'new|')->name('secure-quotes-api');
+
+    Route::post('/favorite-quotes', [FavoriteQuoteController::class, 'update'])->name('update-favorite-quotes-api');
 });

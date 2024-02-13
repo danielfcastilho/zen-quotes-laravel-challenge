@@ -1,8 +1,14 @@
 import QuoteSection from "@/Components/QuoteSection";
 import DefaultLayout from "@/Layouts/DefaultLayout";
 import { Head } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function List({ auth, quotes }) {
+    const [quotesState, setQuotes] = useState(quotes);
+
+    const handleFavoriteRemoved = (quoteId) => {
+        setQuotes(quotesState.filter((quote) => quote.id !== quoteId));
+    };
     return (
         <DefaultLayout
             auth={auth}
@@ -15,9 +21,9 @@ export default function List({ auth, quotes }) {
             <Head title="Favorite Quotes" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    {quotes.length > 0 ? (
+                    {quotesState.length > 0 ? (
                         <div className="grid md:grid-cols-2 gap-4">
-                            {quotes.map((quote) => (
+                            {quotesState.map((quote) => (
                                 <div
                                     key={quote.id}
                                     className="bg-white overflow-hidden shadow-sm sm:rounded-lg"
@@ -27,6 +33,9 @@ export default function List({ auth, quotes }) {
                                             auth={auth}
                                             quote={quote}
                                             isFavorite={true}
+                                            onFavoriteRemoved={() =>
+                                                handleFavoriteRemoved(quote.id)
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -38,8 +47,8 @@ export default function List({ auth, quotes }) {
                                 You don't have any favorite quotes yet.
                             </p>
                             <p className="mt-2 text-gray-600">
-                                Browse quotes and click "Add to favorites" to start
-                                building your collection!
+                                Browse quotes and click "Add to favorites" to
+                                start building your collection!
                             </p>
                         </div>
                     )}

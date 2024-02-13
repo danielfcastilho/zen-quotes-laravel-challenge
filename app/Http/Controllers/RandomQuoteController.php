@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class RandomQuoteController extends Controller
 {
-    public function index($new = null)
+    public function index(Request $request, $new = null)
     {
         $apiUrl = "https://zenquotes.io/api/";
         $cacheKey = 'random_quotes';
@@ -19,6 +19,12 @@ class RandomQuoteController extends Controller
         $cachedData = Cache::get($cacheKey);
 
         if ($cachedData && !$new) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'quotes' => $cachedData['quotes'],
+                ]);
+            }
+
             return Inertia::render('Quotes/Random/List', [
                 'quotes' => $cachedData['quotes'],
             ]);
@@ -56,6 +62,12 @@ class RandomQuoteController extends Controller
                 return $quote;
             })->toArray(),
         ], 30);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'quotes' => $randomQuotes,
+            ]);
+        }
 
         return Inertia::render('Quotes/Random/List', [
             'quotes' => $randomQuotes,
@@ -110,6 +122,12 @@ class RandomQuoteController extends Controller
                 return $quote;
             })->toArray(),
         ], 30);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'quotes' => $secureQuotes,
+            ]);
+        }
 
         return Inertia::render('Quotes/Random/SecureList', [
             'quotes' => $secureQuotes,

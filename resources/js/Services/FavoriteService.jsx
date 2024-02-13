@@ -11,16 +11,18 @@ class FavoriteService extends ApiService {
             url: `${this.favoriteUrl}`,
             data: {
                 quote_id: quoteId,
+                action: "add",
             },
         });
     }
 
     async remove(quoteId) {
         return await this.axiosInstance({
-            method: "delete",
+            method: "post",
             url: `${this.favoriteUrl}`,
             data: {
                 quote_id: quoteId,
+                action: "remove",
             },
         });
     }

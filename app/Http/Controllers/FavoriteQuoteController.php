@@ -32,13 +32,12 @@ class FavoriteQuoteController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function update(Request $request)
     {
-        $request->user()->favoriteQuotes()->attach($request->input('quote_id'));
-    }
-
-    public function destroy(Request $request)
-    {
-        $request->user()->favoriteQuotes()->detach($request->input('quote_id'));
+        if ($request->input('action') === 'add') {
+            $request->user()->favoriteQuotes()->attach($request->input('quote_id'));
+        } else if ($request->input('action') === 'remove') {
+            $request->user()->favoriteQuotes()->detach($request->input('quote_id'));
+        }
     }
 }
