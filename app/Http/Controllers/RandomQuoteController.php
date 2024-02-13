@@ -84,9 +84,18 @@ class RandomQuoteController extends Controller
         $user = $request->user();
 
         if ($cachedData && !$new) {
+            $favorites = $user->favoriteQuotes()->pluck('quotes.id')->toArray();
+            
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'quotes' => $cachedData['quotes'],
+                    'favorites' => $favorites,
+                ]);
+            }
+
             return Inertia::render('Quotes/Random/SecureList', [
                 'quotes' => $cachedData['quotes'],
-                'favorites' => $user->favoriteQuotes()->pluck('quotes.id')->toArray(),
+                'favorites' => $favorites,
             ]);
         }
 
