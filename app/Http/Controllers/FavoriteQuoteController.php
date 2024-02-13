@@ -17,10 +17,18 @@ class FavoriteQuoteController extends Controller
         ]);
     }
 
-    public function report()
+    public function report(Request $request)
     {
+        $loggedInUser = $request->user();
+        $users = User::with('favoriteQuotes')->get();
+        $loggedInUserIndex = $users->search(function ($user) use ($loggedInUser) {
+            return $user->id === $loggedInUser->id;
+        });
+        $loggedInUser = $users->pull($loggedInUserIndex);
+        $users->prepend($loggedInUser);
+
         return Inertia::render('Quotes/Favorites/Report', [
-            'users' => User::with('favoriteQuotes')->get()->toArray(),
+            'users' => $users->toArray(),
         ]);
     }
 
