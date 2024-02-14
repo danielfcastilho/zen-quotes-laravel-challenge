@@ -1,7 +1,14 @@
+import React from "react";
+import { Head, usePage } from "@inertiajs/react";
 import DefaultLayout from "@/Layouts/DefaultLayout";
-import { Head } from "@inertiajs/react";
+import GetQuotes from "./Partials/GetQuotes";
+import GetSecureQuotes from "./Partials/GetSecureQuotes";
+import PostFavoriteQuotes from "./Partials/PostFavoriteQuotes";
 
-export default function Today({ auth }) {
+export default function ApiTest({ auth }) {
+    const { props } = usePage();
+    const currentApiToken = props.apiToken;
+
     return (
         <DefaultLayout
             auth={auth}
@@ -13,11 +20,15 @@ export default function Today({ auth }) {
         >
             <Head title="Online API Test" />
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900"></div>
-                    </div>
-                </div>
+                <GetQuotes auth={auth} currentApiToken={currentApiToken} />
+                <GetSecureQuotes
+                    auth={auth}
+                    currentApiToken={currentApiToken}
+                />
+                <PostFavoriteQuotes
+                    auth={auth}
+                    currentApiToken={currentApiToken}
+                />
             </div>
         </DefaultLayout>
     );

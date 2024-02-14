@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ApiTestController extends Controller
@@ -10,11 +9,8 @@ class ApiTestController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function __invoke()
     {
-        return Inertia::render('Api/Test', [
-            'quote' => ['quote_text' => "lorem ipsum [cached]"],
-            'randomInspirationalImage' => "image"
-        ]);
+        return Inertia::render('Api/Test');
     }
 }

@@ -3,7 +3,12 @@ import axios from "axios";
 export default class ApiService {
     constructor(token) {
         const apiURL = "/api";
-        this.favoriteUrl = `${apiURL}/favorite-quotes`;
+
+        this.token = token;
+
+        this.randomQuotesUrl = `${apiURL}/quotes`;
+        this.secureQuotesUrl = `${apiURL}/secure-quotes`;
+        this.favoriteQuotesUrl = `${apiURL}/favorite-quotes`;
 
         this.axiosInstance = axios.create();
 
@@ -13,8 +18,8 @@ export default class ApiService {
                 config.headers["Content-Type"] = "application/json";
                 config.withCredentials = true;
 
-                if (token) {
-                    config.headers["Authorization"] = "Bearer " + token;
+                if (this.token) {
+                    config.headers["Authorization"] = "Bearer " + this.token;
                 }
 
                 return config;
@@ -23,43 +28,9 @@ export default class ApiService {
                 return Promise.reject(error);
             }
         );
+    }
 
-        // Add a response interceptor
-        this.axiosInstance.interceptors.response.use(
-            (response) => {
-                if (response.data.message) {
-                    //success notification
-                }
-
-                return response;
-            },
-            (error) => {
-                if (error.response) {
-                    switch (error.response.status) {
-                        case 400:
-                        case 401:
-                        case 403:
-                        case 404:
-                            if (error.response.data.message) {
-                                //error notification
-                            }
-                            break;
-                        case 422:
-                            if (error.response.data.errors) {
-                                //error notification
-                            }
-                            break;
-                        case 500:
-                        default:
-                        //error notification
-                    }
-                } else if (error.request) {
-                    console.error("No response received:", error.request);
-                } else {
-                    console.error("Error", error.message);
-                }
-                return Promise.reject(error);
-            }
-        );
+    setApiToken(token = null) {
+        this.token = token;
     }
 }

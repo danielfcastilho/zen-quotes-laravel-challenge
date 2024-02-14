@@ -5,13 +5,13 @@ import { useApi } from "@/Contexts/ApiContext";
 export default function QuoteSection({ auth, quote, isFavorite, onFavoriteRemoved = null }) {
     const [favorite, setFavorite] = useState(isFavorite);
 
-    const { favoriteService } = useApi();
+    const { favoriteQuoteService } = useApi();
 
     const handleFavoriteToggle = async () => {
         if (!favorite) {
-            await favoriteService.add(quote.id);
+            await favoriteQuoteService.add(quote.id);
         } else {
-            await favoriteService.remove(quote.id);
+            await favoriteQuoteService.remove(quote.id);
             onFavoriteRemoved && onFavoriteRemoved();
         }
         setFavorite(!favorite);

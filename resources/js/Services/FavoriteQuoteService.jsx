@@ -1,6 +1,6 @@
 import ApiService from "./ApiService";
 
-class FavoriteService extends ApiService {
+class FavoriteQuoteService extends ApiService {
     constructor(token) {
         super(token);
     }
@@ -8,7 +8,7 @@ class FavoriteService extends ApiService {
     async add(quoteId) {
         return await this.axiosInstance({
             method: "post",
-            url: `${this.favoriteUrl}`,
+            url: `${this.favoriteQuotesUrl}`,
             data: {
                 quote_id: quoteId,
                 action: "add",
@@ -19,7 +19,7 @@ class FavoriteService extends ApiService {
     async remove(quoteId) {
         return await this.axiosInstance({
             method: "post",
-            url: `${this.favoriteUrl}`,
+            url: `${this.favoriteQuotesUrl}`,
             data: {
                 quote_id: quoteId,
                 action: "remove",
@@ -28,4 +28,4 @@ class FavoriteService extends ApiService {
     }
 }
 
-export default FavoriteService;
+export default FavoriteQuoteService;

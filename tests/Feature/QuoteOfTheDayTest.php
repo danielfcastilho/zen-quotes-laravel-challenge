@@ -42,7 +42,7 @@ class QuoteOfTheDayTest extends TestCase
     /**
      * A web page with URI of “/today” that shows “quote of the day”.
      */
-    public function test_a_web_page_uri_of_today_that_shows_quote_of_the_day()
+    public function test_a_web_page_with_uri_of_today_that_shows_quote_of_the_day()
     {
         $response = $this->actingAs($this->user)->get('/today');
 

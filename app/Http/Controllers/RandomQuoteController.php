@@ -19,7 +19,7 @@ class RandomQuoteController extends Controller
         $cachedData = Cache::get($cacheKey);
 
         if ($cachedData && !$new) {
-            if ($request->wantsJson()) {
+            if ($request->is('api/*')) {
                 return response()->json([
                     'quotes' => $cachedData['quotes'],
                 ]);
@@ -63,7 +63,7 @@ class RandomQuoteController extends Controller
             })->toArray(),
         ], 30);
 
-        if ($request->wantsJson()) {
+        if ($request->is('api/*')) {
             return response()->json([
                 'quotes' => $randomQuotes,
             ]);
@@ -84,18 +84,15 @@ class RandomQuoteController extends Controller
         $user = $request->user();
 
         if ($cachedData && !$new) {
-            $favorites = $user->favoriteQuotes()->pluck('quotes.id')->toArray();
-            
-            if ($request->wantsJson()) {
+            if ($request->is('api/*')) {
                 return response()->json([
                     'quotes' => $cachedData['quotes'],
-                    'favorites' => $favorites,
                 ]);
             }
 
             return Inertia::render('Quotes/Random/SecureList', [
                 'quotes' => $cachedData['quotes'],
-                'favorites' => $favorites,
+                'favorites' => $user->favoriteQuotes()->pluck('quotes.id')->toArray(),
             ]);
         }
 
@@ -132,7 +129,7 @@ class RandomQuoteController extends Controller
             })->toArray(),
         ], 30);
 
-        if ($request->wantsJson()) {
+        if ($request->is('api/*')) {
             return response()->json([
                 'quotes' => $secureQuotes,
             ]);

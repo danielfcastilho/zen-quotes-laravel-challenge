@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return $request->expectsJson()
+        return $request->is('api/*')
             ? response()->json([], 401)
             : redirect()->guest($exception->redirectTo() ?? route('login'));
     }

@@ -31,9 +31,9 @@ export default function Report({ auth, users }) {
             <Head title="Report of Favorite Quotes" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="gap-4">
                         {usersState.map((user) => (
-                            <div key={user.id} className="overflow-hidden">
+                            <div key={user.id} className="overflow-hidden mb-4">
                                 <div className="shadow-sm sm:rounded-lg bg-white p-6 text-gray-900 flex flex-col">
                                     <h2
                                         className={`${
