@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateFavoriteRequest;
 use App\Http\Resources\QuoteResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -34,12 +35,31 @@ class FavoriteQuoteController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateFavoriteRequest $request)
     {
-        if ($request->input('action') === 'add') {
-            $request->user()->favoriteQuotes()->attach($request->input('quote_id'));
-        } else if ($request->input('action') === 'remove') {
-            $request->user()->favoriteQuotes()->detach($request->input('quote_id'));
+        $user = $request->user();
+
+        $quoteId = $request->validated('quote_id');
+        $action = $request->validated('action');
+
+        switch ($action) {
+            case 'add':
+                if (!$user->favoriteQuotes()->where('quote_id', $quoteId)->exists()) {
+                    $user->favoriteQuotes()->attach($quoteId);
+                } else {
+                    return response()->json([], 400);
+                }
+                break;
+            case 'remove':
+                if ($user->favoriteQuotes()->where('quote_id', $quoteId)->exists()) {
+                    $user->favoriteQuotes()->detach($quoteId);
+                } else {
+                    return response()->json([], 400);
+                }
+                break;
+            default:
+                return response()->json([], 400);
         }
+        return response()->json([], 200);
     }
 }
