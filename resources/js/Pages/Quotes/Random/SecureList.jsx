@@ -2,7 +2,7 @@ import QuoteSection from "@/Components/QuoteSection";
 import DefaultLayout from "@/Layouts/DefaultLayout";
 import { Head } from "@inertiajs/react";
 
-export default function SecureList({ auth, quotes, favorites }) {
+export default function SecureList({ auth, quotes }) {
     return (
         <DefaultLayout
             auth={auth}
@@ -23,7 +23,6 @@ export default function SecureList({ auth, quotes, favorites }) {
                                     <QuoteSection
                                         auth={auth}
                                         quote={quote}
-                                        isFavorite={favorites.includes(quote.id)}
                                     />
                                 </div>
                             </div>

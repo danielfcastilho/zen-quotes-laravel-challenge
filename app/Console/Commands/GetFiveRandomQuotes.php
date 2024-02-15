@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Quote;
+use App\Enums\StrategyType;
+use App\Http\Resources\QuoteResource;
+use App\Services\Api\ApiService;
+use App\Services\QuoteService;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class GetFiveRandomQuotes extends Command
 {
@@ -25,6 +25,11 @@ class GetFiveRandomQuotes extends Command
      */
     protected $description = 'Console/Shell Command for Five Random Quotes';
 
+    public function __construct(protected ApiService $apiService, protected QuoteService $quoteService)
+    {
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
@@ -32,49 +37,14 @@ class GetFiveRandomQuotes extends Command
     {
         $new = (bool)$this->option('new');
 
-        $apiUrl = "https://zenquotes.io/api/";
-        $cacheKey = 'random_quotes';
+        $randomQuotesResponse = $this->apiService->fetchData(StrategyType::RandomQuotes, $new);
 
-        $cachedData = Cache::get($cacheKey);
+        $randomQuotes = $this->quoteService->findOrCreateMany($randomQuotesResponse->data, $randomQuotesResponse->fromCache);
 
-        if ($cachedData && !$new) {
-            foreach ($cachedData['quotes'] as $quote) {
-                $this->line("{$quote['quote_text']} - {$quote['author_name']}");
-            }
-            return 0;
+        $randomQuotesCollection = QuoteResource::collection($randomQuotes)->resolve();
+
+        foreach ($randomQuotesCollection as $quote) {
+            $this->line("{$quote['quote_text']} - {$quote['author_name']}");
         }
-
-        $response = Http::get($apiUrl . 'quotes');
-
-        $quotesResponse = $response->json();
-
-        $quotes = new Collection();
-        foreach ($quotesResponse as $key => $quoteResponse) {
-            if ($key === 5) {
-                break;
-            }
-            $quote = Quote::where([
-                'quote_text' => $quoteResponse['q'],
-                'author_name' => $quoteResponse['a']
-            ])->first();
-
-            if (!$quote) {
-                $quote = new Quote();
-                $quote->quote_text = $quoteResponse['q'];
-                $quote->author_name = $quoteResponse['a'];
-                $quote->save();
-            }
-
-            $this->line("{$quote->quote_text} - {$quote->author_name}");
-
-            $quotes->push($quote);
-        }
-
-        Cache::put($cacheKey, [
-            'quotes' => $quotes->map(function ($quote) {
-                $quote->quote_text = '[cached]' . $quote->quote_text;
-                return $quote;
-            })->toArray(),
-        ], 30);
     }
 }

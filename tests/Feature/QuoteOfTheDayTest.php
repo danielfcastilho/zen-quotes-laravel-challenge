@@ -71,7 +71,7 @@ class QuoteOfTheDayTest extends TestCase
             function ($page) use ($cachedValue) {
                 $page->has('quote')
                     ->where('quote', function ($quote) use ($cachedValue) {
-                        return $quote['quote_text'] === $cachedValue['quote']['quote_text'];
+                        return str_contains($quote['quote_text'], $cachedValue[0]['q']);
                     });
             }
         );
@@ -134,9 +134,9 @@ class QuoteOfTheDayTest extends TestCase
         $response = $this->actingAs($this->user)->get('/today');
 
         $response->assertInertia(
-            fn ($page) => $page->has('isFavorite')
-                ->where('isFavorite', function ($isFavorite) {
-                    return $isFavorite === false;
+            fn ($page) => $page->has('quote')
+                ->where('quote', function ($quote) {
+                    return $quote['is_favorite'] === false;
                 })
         );
 
@@ -150,11 +150,12 @@ class QuoteOfTheDayTest extends TestCase
         $response = $this->actingAs($this->user)->get('/today');
 
         $response->assertInertia(
-            fn ($page) => $page->has('isFavorite')
-                ->where('isFavorite', function ($isFavorite) {
-                    return $isFavorite === true;
+            fn ($page) => $page->has('quote')
+                ->where('quote', function ($quote) {
+                    return $quote['is_favorite'] === true;
                 })
         );
+
     }
 
     /**

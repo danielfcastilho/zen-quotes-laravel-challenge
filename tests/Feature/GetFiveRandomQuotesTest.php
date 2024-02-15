@@ -75,8 +75,8 @@ class GetFiveRandomQuotesTest extends TestCase
         $cachedQuotes = Cache::get('random_quotes');
 
         $testedCommand = $this->artisan('Get-FiveRandomQuotes');
-        foreach ($cachedQuotes['quotes'] as $quote) {
-            $testedCommand->expectsOutputToContain("{$quote['quote_text']} - {$quote['author_name']}");
+        foreach ($cachedQuotes as $quote) {
+            $testedCommand->expectsOutputToContain("{$quote['q']} - {$quote['a']}");
         }
         $testedCommand->assertExitCode(0);
     }
@@ -105,8 +105,8 @@ class GetFiveRandomQuotesTest extends TestCase
         $cachedQuotes = Cache::get('random_quotes');
 
         $testedCommand = $this->artisan('Get-FiveRandomQuotes');
-        foreach ($cachedQuotes['quotes'] as $quote) {
-            $testedCommand->expectsOutputToContain("{$quote['quote_text']} - {$quote['author_name']}");
+        foreach ($cachedQuotes as $quote) {
+            $testedCommand->expectsOutputToContain("{$quote['q']} - {$quote['a']}");
         }
         $testedCommand->assertExitCode(0);
     }

@@ -120,8 +120,8 @@ class SecureQuoteAPITest extends TestCase
         $quotes = $responseData['quotes'];
 
         $expectedQuotes = array_map(function ($quote) {
-            return $quote['quote_text'];
-        }, $cachedQuotes['quotes']);
+            return '[cached] ' . $quote['q'];
+        }, $cachedQuotes);
 
         $actualQuotes = array_map(function ($quote) {
             return $quote['quote_text'];
@@ -167,8 +167,8 @@ class SecureQuoteAPITest extends TestCase
         $quotes = $responseData['quotes'];
 
         $expectedQuotes = array_map(function ($quote) {
-            return $quote['quote_text'];
-        }, $cachedQuotes['quotes']);
+            return '[cached] ' . $quote['q'];
+        }, $cachedQuotes);
 
         $actualQuotes = array_map(function ($quote) {
             return $quote['quote_text'];

@@ -95,8 +95,8 @@ class RandomQuoteTest extends TestCase
                 $page->has('quotes')
                     ->where('quotes', function ($quotes) use ($cachedQuotes) {
                         $expectedQuotes = array_map(function ($quote) {
-                            return $quote['quote_text'];
-                        }, $cachedQuotes['quotes']);
+                            return '[cached] ' . $quote['q'];
+                        }, $cachedQuotes);
 
                         $actualQuotes = array_map(function ($quote) {
                             return $quote['quote_text'];

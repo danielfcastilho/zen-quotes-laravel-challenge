@@ -2,8 +2,8 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import { useState } from "react";
 import { useApi } from "@/Contexts/ApiContext";
 
-export default function QuoteSection({ auth, quote, isFavorite, onFavoriteRemoved = null }) {
-    const [favorite, setFavorite] = useState(isFavorite);
+export default function QuoteSection({ auth, quote, onFavoriteRemoved = null }) {
+    const [favorite, setFavorite] = useState(quote.is_favorite);
 
     const { favoriteQuoteService } = useApi();
 

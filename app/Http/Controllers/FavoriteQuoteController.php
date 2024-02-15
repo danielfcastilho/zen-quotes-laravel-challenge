@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\QuoteResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +15,7 @@ class FavoriteQuoteController extends Controller
         $user = $request->user();
 
         return Inertia::render('Quotes/Favorites/List', [
-            'quotes' => $user->favoriteQuotes()->get()->toArray(),
+            'quotes' => QuoteResource::collection($user->favoriteQuotes()->get()),
         ]);
     }
 
@@ -28,7 +30,7 @@ class FavoriteQuoteController extends Controller
         $users->prepend($loggedInUser);
 
         return Inertia::render('Quotes/Favorites/Report', [
-            'users' => $users->toArray(),
+            'users' => UserResource::collection($users),
         ]);
     }
 
