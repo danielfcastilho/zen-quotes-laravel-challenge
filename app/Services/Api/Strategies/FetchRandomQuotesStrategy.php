@@ -2,16 +2,30 @@
 
 namespace App\Services\Api\Strategies;
 
-use App\Services\Api\ApiStrategyInterface;
+use App\Services\Api\ApiStrategyAbstract;
 use Illuminate\Support\Facades\Http;
 
-class FetchRandomQuotesStrategy extends ApiStrategyInterface
+class FetchRandomQuotesStrategy extends ApiStrategyAbstract
 {
     protected $apiUrl = 'https://zenquotes.io/api/quotes';
 
     public function fetchData()
     {
         $response = Http::get($this->apiUrl);
-        return array_slice($response->json(), 0, 5);
+
+        $data = $response->json();
+
+        $this->validateResponse($data);
+
+        return array_slice($data, 0, 5);
+    }
+
+    protected function rules(): array
+    {
+        return [
+            '*' => 'required|array',
+            '*.q' => 'required|string',
+            '*.a' => 'required|string',
+        ];
     }
 }

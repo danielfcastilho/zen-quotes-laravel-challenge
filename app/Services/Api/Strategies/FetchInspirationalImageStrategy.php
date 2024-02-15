@@ -2,10 +2,10 @@
 
 namespace App\Services\Api\Strategies;
 
-use App\Services\Api\ApiStrategyInterface;
+use App\Services\Api\ApiStrategyAbstract;
 use Illuminate\Support\Facades\Storage;
 
-class FetchInspirationalImageStrategy extends ApiStrategyInterface
+class FetchInspirationalImageStrategy extends ApiStrategyAbstract
 {
     protected $apiUrl = 'https://zenquotes.io/api/image';
 
@@ -18,5 +18,10 @@ class FetchInspirationalImageStrategy extends ApiStrategyInterface
         $imagePath = '/storage/' . $imageName;
 
         return $imagePath;
+    }
+
+    protected function rules(): array
+    {
+        return [];
     }
 }

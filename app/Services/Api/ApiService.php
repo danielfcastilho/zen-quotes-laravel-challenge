@@ -5,6 +5,7 @@ namespace App\Services\Api;
 use App\Enums\StrategyType;
 use App\Services\Api\ApiStrategyFactory;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ApiService
 {
@@ -17,7 +18,12 @@ class ApiService
             return new ApiResponse($cachedData, true);
         }
 
-        $data = $strategy->fetchData();
+        try {
+            $data = $strategy->fetchData();
+        } catch (\Exception $e) {
+            Log::error('API request returned with an error: ' . $e->getMessage());
+            return new ApiResponse();
+        }
 
         Cache::put($strategyType->value, $data, $cacheDuration);
 

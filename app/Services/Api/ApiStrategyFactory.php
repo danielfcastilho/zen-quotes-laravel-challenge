@@ -14,9 +14,9 @@ class ApiStrategyFactory
      * Create an instance of a strategy based on the type.
      *
      * @param StrategyType $type The type of strategy.
-     * @return ApiStrategyInterface An instance of a class implementing ApiStrategyInterface.
+     * @return ApiStrategyAbstract An instance of a class implementing ApiStrategyAbstract.
      */
-    public static function make(StrategyType $type): ApiStrategyInterface
+    public static function make(StrategyType $type): ApiStrategyAbstract
     {
         return match ($type) {
             StrategyType::DailyQuote => new FetchDailyQuoteStrategy(),

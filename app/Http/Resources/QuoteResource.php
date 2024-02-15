@@ -26,6 +26,10 @@ class QuoteResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (is_null($this->resource)) {
+            return [];
+        }
+
         return [
             'id' => $this->id,
             'quote_text' => ($this->isCached ? '[cached] ' : '') . $this->quote_text,
