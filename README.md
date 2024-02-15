@@ -1,3 +1,6 @@
+## Overview
+This project is a Laravel and React web application delivering inspirational quotes with features like user authentication, quote caching, and favorites management. It uses Docker for easy setup and is developed with TDD by following the approach of `red`, `green`, `refactor`.
+
 ## Requirements
 - Docker desktop installed
 - Composer installed
@@ -49,3 +52,23 @@
 - nunomaduro/collision: ^7.0
 - phpunit/phpunit: ^10.1
 - spatie/laravel-ignition: ^2.0
+
+## Implemented and Tested Features
+- Datastore Initialization [implemented] [tested]
+- Cache [implemented] [tested]
+- Web/API Authentication [implemented] [tested]
+- Web Registration for Users [implemented] [tested]
+- Quote of the Day [implemented] [tested]
+- Five Random Quotes [implemented] [tested]
+- Ten Secure Quotes [implemented] [tested]
+- Favorite Quotes [implemented] [tested]
+- Report of Favorite Quotes [implemented] [tested]
+- REST API for Five Random Quotes [implemented] [tested]
+- REST API for Ten Secure Quotes [implemented] [tested]
+- Online API Test [implemented] [tested]
+- Console/Shell Command for Five Random Quotes [implemented] [tested]
+- PHP Automated Testing [implemented] [tested]
+- Documentation [implemented]
+
+## Amount of Time to Complete
+### 16 hours
