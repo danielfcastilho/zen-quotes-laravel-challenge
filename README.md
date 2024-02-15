@@ -3,7 +3,8 @@
 - Composer installed
 
 ## Running the app
-- Go to the project root folder
+- Clone the project `git clone git@github.com:danielfcastilho/zen-quotes-laravel-challenge.git`
+- Go inside the project root folder `cd zen-quotes-laravel-challenge/`
 - run `composer update`
 - run `docker compose -d up`
 - run `touch database/database.sqlite`
